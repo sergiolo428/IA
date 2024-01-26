@@ -5,6 +5,8 @@ function template_T1_E6
 
 % Cargar base de datos
 
+load('College.mat')
+load('Auto.mat')
 
 disp('%%%%%%%%%%%%%%%%% EJERCICIO 6 %%%%%%%%%%%%%%%%%');
 disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
@@ -14,9 +16,6 @@ fprintf('\n\n')
 % variables cuantitativas
 disp('%%%%%%%%%%%%%%%%% Apartado 1 %%%%%%%%%%%%%%%%%');
 disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
-
-
-
 
 % Apartado 2 - Realizar el conteo de universidades públicas y privadas.
 fprintf('\n')

@@ -2,6 +2,7 @@ function ClaseRepaso
 
 % Crear vectores
 
+
 x1 = [1 2 3 4 5];
 
 % Vector columna
