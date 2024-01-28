@@ -115,7 +115,7 @@ y = exp(-t/10).*cos(5*t);
 
 % Superficies (una variable depende de dos independientes)
 
-% COntorno 2D
+% Contorno 2D
 x = -1:0.01:0.99;
 y = -1:0.01:0.99;
 [X,Y] = meshgrid(x,y); % Crea dos matrices lenx * lenx repitiendo el array x lenx veces, hace lo mismo con la y
@@ -174,3 +174,7 @@ marcas = Auto{:,end};
 p = sum(strcmp(marcas,'chebrolet chevelle malibu'));
 
 length(find(cilindros==4));
+
+
+
+

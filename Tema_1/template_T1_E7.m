@@ -33,39 +33,39 @@ name2 = Auto2{:,9};
 disp('%%%%%%%%%%%%%%%%% Apartado 2 %%%%%%%%%%%%%%%%%');
 disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 
-% figure(1);
-% sgtitle('Histograma variables')
-% subplot(2,4,1);
-% histogram(Auto.mpg);
-% title('MPG')
-% 
-% subplot(2,4,2);
-% histogram(Auto.cylinders);
-% title('Cylindres')
-% 
-% subplot(2,4,3);
-% histogram(Auto.displacement);
-% title('Displacement')
-% 
-% subplot(2,4,4);
-% histogram(Auto.horsepower);
-% title('Horsepower')
-% 
-% subplot(2,4,5);
-% histogram(Auto.weight);
-% title('Weight')
-% 
-% subplot(2,4,6);
-% histogram(Auto.acceleration);
-% title('Acceleration')
-% 
-% subplot(2,4,7);
-% histogram(Auto.year);
-% title('Year')
-% 
-% subplot(2,4,8);
-% histogram(Auto.origin);
-% title('Origin')
+figure(1);
+sgtitle('Histograma variables')
+subplot(2,4,1);
+histogram(Auto.mpg);
+title('MPG')
+
+subplot(2,4,2);
+histogram(Auto.cylinders);
+title('Cylindres')
+
+subplot(2,4,3);
+histogram(Auto.displacement);
+title('Displacement')
+
+subplot(2,4,4);
+histogram(Auto.horsepower);
+title('Horsepower')
+
+subplot(2,4,5);
+histogram(Auto.weight);
+title('Weight')
+
+subplot(2,4,6);
+histogram(Auto.acceleration);
+title('Acceleration')
+
+subplot(2,4,7);
+histogram(Auto.year);
+title('Year')
+
+subplot(2,4,8);
+histogram(Auto.origin);
+title('Origin')
 
 
 
@@ -101,24 +101,24 @@ fprintf('\n')
 disp('%%%%%%%%%%%%%%%%% Apartado 5 %%%%%%%%%%%%%%%%%');
 disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 
-% figure(2)
-% sgtitle('Respecto al Nº de cilindros');
-% 
-% subplot(2,2,1)
-% scatter(Auto2{:,2},Auto2{:,1})
-% title('MPG')
-% 
-% subplot(2,2,2)
-% scatter(Auto2{:,2},Auto2{:,3})
-% title('Displacement')
-% 
-% subplot(2,2,3)
-% scatter(Auto2{:,2},Auto2{:,4})
-% title('Horsepower')
-% 
-% subplot(2,2,4)
-% scatter(Auto2{:,2},Auto2{:,5})
-% title('Weight')
+figure(2)
+sgtitle('Respecto al Nº de cilindros');
+
+subplot(2,2,1)
+scatter(Auto2{:,2},Auto2{:,1})
+title('MPG')
+
+subplot(2,2,2)
+scatter(Auto2{:,2},Auto2{:,3})
+title('Displacement')
+
+subplot(2,2,3)
+scatter(Auto2{:,2},Auto2{:,4})
+title('Horsepower')
+
+subplot(2,2,4)
+scatter(Auto2{:,2},Auto2{:,5})
+title('Weight')
 
 % Apartado 5 -   Suponer que queremos predecir la autonom´ıa del coche dada 
 % en millas por galón (mpg) en base a otros predicotres. ¿Alguno de los 
@@ -128,24 +128,24 @@ fprintf('\n')
 disp('%%%%%%%%%%%%%%%%% Apartado 6 %%%%%%%%%%%%%%%%%');
 disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 
-% figure(3)
-% sgtitle('Respecto a MPG');
-% 
-% subplot(2,2,1)
-% scatter(Auto2{:,1},cylinders2)
-% title('Cylinders')
-% 
-% subplot(2,2,2)
-% scatter(Auto2{:,1},displacement2)
-% title('Displacement')
-% 
-% subplot(2,2,3)
-% scatter(Auto2{:,1},horsepower2)
-% title('Horsepower')
-% 
-% subplot(2,2,4)
-% scatter(Auto2{:,1},weight2)
-% title('Weight')
+figure(3)
+sgtitle('Respecto a MPG');
+
+subplot(2,2,1)
+scatter(Auto2{:,1},cylinders2)
+title('Cylinders')
+
+subplot(2,2,2)
+scatter(Auto2{:,1},displacement2)
+title('Displacement')
+
+subplot(2,2,3)
+scatter(Auto2{:,1},horsepower2)
+title('Horsepower')
+
+subplot(2,2,4)
+scatter(Auto2{:,1},weight2)
+title('Weight')
 
 figure(4)
 sgtitle('MPG respecto 2 variables')
