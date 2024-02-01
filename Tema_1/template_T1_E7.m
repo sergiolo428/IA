@@ -97,6 +97,10 @@ disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 % manera gráfica haciendo uso de la función \textit{scatter}. 
 % Crea gráficos que resalten la relación entre predictores. 
 % Resume los resultados obtenidos.
+
+% Notas: Pintar todos los predictores frente a todos,
+% Es decir una figura de 5x5 subplots
+
 fprintf('\n')
 disp('%%%%%%%%%%%%%%%%% Apartado 5 %%%%%%%%%%%%%%%%%');
 disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
