@@ -57,7 +57,7 @@ desviacion
 disp('-----Rango-----');
 rango
 
-% Apartado 4 - Eliminar las observaciones en el rango $10-85$. 
+%% --- Apartado 4 - Eliminar las observaciones en el rango $10-85$. ---- %%
 % ¿Cuál es ahora el rango, media y desviación estándar de cada predictor?
 fprintf('\n')
 disp('%%%%%%%%%%%%%%%%% Apartado 4 %%%%%%%%%%%%%%%%%');
@@ -152,7 +152,7 @@ for j=2:num
         xlabel(nx);ylabel(ny);%title(titulo);        
 end
 
-%% Cinclusion apartado 5:
+% Conclusion apartado 5:
 
 % Podemos ver de una forma mas efectiva o menos, todas las variables
 % incluidas en la figura 3 nos puede aportar informacion para predecir la
