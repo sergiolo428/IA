@@ -1,4 +1,7 @@
 function template_T1_E7
+
+%% --- Sergio López --- %%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% EJERCICIO 7 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -12,62 +15,27 @@ disp('%%%%%%%%%%%%%%%%% EJERCICIO 7 %%%%%%%%%%%%%%%%%');
 disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 fprintf('\n\n')
 
-% Apartado 1 - Remover valores perdidos
+%% --------------- Apartado 1 - Remover valores perdidos --------------- %%
 
 correctPos=~isnan(Auto.horsepower);
 Auto2 = Auto(correctPos,:);
 
-mpg2 = Auto2{:,1};
-cylinders2 = Auto2{:,2};
-displacement2 = Auto2{:,3};
-horsepower2 = Auto2{:,4};
-weight2 = Auto2{:,5};
-acceleration2 = Auto2{:,6};
-year2 = Auto2{:,7};
-origin2 = Auto2{:,8};
-name2 = Auto2{:,9};
-
-
-% Apartado 2 - Identifica los predictores cuantitativos y los cualitativos
+%% Apartado 2 - Identifica los predictores cuantitativos y los cualitativos
 % fprintf('\n')
 disp('%%%%%%%%%%%%%%%%% Apartado 2 %%%%%%%%%%%%%%%%%');
 disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 
-figure(1);
-sgtitle('Histograma variables')
-subplot(2,4,1);
-histogram(Auto.mpg);
-title('MPG')
+figure(5)
 
-subplot(2,4,2);
-histogram(Auto.cylinders);
-title('Cylindres')
+for z=1:8
 
-subplot(2,4,3);
-histogram(Auto.displacement);
-title('Displacement')
+    subplot(2,4,z)
+    histogram(Auto2{:,z})
+    titulo = Auto2.Properties.VariableNames{z};
+    titulo(1) = upper(titulo(1));
+    title(titulo);
 
-subplot(2,4,4);
-histogram(Auto.horsepower);
-title('Horsepower')
-
-subplot(2,4,5);
-histogram(Auto.weight);
-title('Weight')
-
-subplot(2,4,6);
-histogram(Auto.acceleration);
-title('Acceleration')
-
-subplot(2,4,7);
-histogram(Auto.year);
-title('Year')
-
-subplot(2,4,8);
-histogram(Auto.origin);
-title('Origin')
-
-
+end
 
 % Apartado 3 - Calcular la media, desviación estándar y rango de cada uno 
 % de los predictores cuantitativos
@@ -82,16 +50,41 @@ desviacion = std(Auto2(:,1:6));
 maximo = max(Auto2(:,1:6));
 minimo = min(Auto2(:,1:6));
 
-rangoTabla = vertcat(maximo,minimo)
+rangoTabla = vertcat(maximo,minimo);
 rango = maximo - minimo;
 
-% Apartado 4 - Eliminar las observaciones en el rango $10-85$. 
+disp('-----Media-----');
+media
+disp('-----Desviacion-----');
+desviacion
+disp('-----Rango-----');
+rango
+
+%% --- Apartado 4 - Eliminar las observaciones en el rango $10-85$. ---- %%
 % ¿Cuál es ahora el rango, media y desviación estándar de cada predictor?
 fprintf('\n')
 disp('%%%%%%%%%%%%%%%%% Apartado 4 %%%%%%%%%%%%%%%%%');
 disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 
+Auto3 = Auto2;
+Auto3(10:85,:)=[];
 
+media=mean(Auto3(:,1:6));
+
+desviacion = std(Auto3(:,1:6));
+
+maximo = max(Auto3(:,1:6));
+minimo = min(Auto3(:,1:6));
+
+rangoTabla = vertcat(maximo,minimo);
+rango = maximo - minimo;
+
+disp('-----Media-----');
+media
+disp('-----Desviacion-----');
+desviacion
+disp('-----Rango-----');
+rango
 
 % Apartado 5 -  Usando toda la base de datos, analiza los predictores de 
 % manera gráfica haciendo uso de la función \textit{scatter}. 
@@ -106,23 +99,29 @@ disp('%%%%%%%%%%%%%%%%% Apartado 5 %%%%%%%%%%%%%%%%%');
 disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 
 figure(2)
-sgtitle('Respecto al Nº de cilindros');
+num=5;
 
-subplot(2,2,1)
-scatter(Auto2{:,2},Auto2{:,1})
-title('MPG')
+for i=1:num
+    for j=1:num
 
-subplot(2,2,2)
-scatter(Auto2{:,2},Auto2{:,3})
-title('Displacement')
+        %%% Otenemos valor posicion
+        pos=(i - 1) * 5 + j;
 
-subplot(2,2,3)
-scatter(Auto2{:,2},Auto2{:,4})
-title('Horsepower')
+        %%% Subplot + scatter
+        subplot(5,5,pos)
+        scatter(Auto2{:,i},Auto2{:,j})
 
-subplot(2,2,4)
-scatter(Auto2{:,2},Auto2{:,5})
-title('Weight')
+        %%% Primera en mayusculas
+        nx=Auto.Properties.VariableNames{i};
+        ny=Auto.Properties.VariableNames{j};
+        nx(1)=upper(nx(1));
+        ny(1)=upper(ny(1));
+        
+        %%% Title + labels
+        titulo = sprintf('%s en funcion de %s',ny,nx);
+        xlabel(nx);ylabel(ny);%title(titulo);        
+    end
+end    
 
 % Apartado 5 -   Suponer que queremos predecir la autonom´ıa del coche dada 
 % en millas por galón (mpg) en base a otros predicotres. ¿Alguno de los 
@@ -132,40 +131,35 @@ fprintf('\n')
 disp('%%%%%%%%%%%%%%%%% Apartado 6 %%%%%%%%%%%%%%%%%');
 disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 
-figure(3)
-sgtitle('Respecto a MPG');
+ figure(3)
 
-subplot(2,2,1)
-scatter(Auto2{:,1},cylinders2)
-title('Cylinders')
+% Graficas utiles para predecir mpg
 
-subplot(2,2,2)
-scatter(Auto2{:,1},displacement2)
-title('Displacement')
+for j=2:num
 
-subplot(2,2,3)
-scatter(Auto2{:,1},horsepower2)
-title('Horsepower')
+        %%% Otenemos valor posicion
+        pos=j-1;
 
-subplot(2,2,4)
-scatter(Auto2{:,1},weight2)
-title('Weight')
+        %%% Subplot + scatter
+        subplot(2,2,pos)
+        scatter(Auto2{:,1},Auto2{:,j})
 
-figure(4)
-sgtitle('MPG respecto 2 variables')
+        %%% Primera en mayusculas
+        nx=Auto.Properties.VariableNames{1};
+        ny=Auto.Properties.VariableNames{j};
+        nx(1)=upper(nx(1));
+        ny(1)=upper(ny(1));
+        
+        %%% Title + labels
+        titulo = sprintf('%s en funcion de %s',ny,nx);
+        xlabel(nx);ylabel(ny);%title(titulo);        
+end
 
-subplot(1,3,1)
-scatter3(horsepower2,displacement2,mpg2)
-xlabel('Horsepower');ylabel('Displacement');zlabel('MPG');
-title('Horsepower y Displacement')
+% Conclusion apartado 5:
 
-subplot(1,3,2)
-scatter3(horsepower2,weight2,mpg2)
-xlabel('Horsepower');ylabel('Weight');zlabel('MPG');
-title('Horsepower y Weight')
+% Podemos ver de una forma mas efectiva o menos, todas las variables
+% incluidas en la figura 3 nos puede aportar informacion para predecir la
+% variable mpg, habria que valorar cuales de ellas podrian aportar mas
+% informacion respecto a mpg
 
-subplot(1,3,3)
-scatter3(displacement2,weight2,mpg2)
-xlabel('Displacement');ylabel('Weight');zlabel('MPG');
-title('Displacement y Weight')
-
+end
