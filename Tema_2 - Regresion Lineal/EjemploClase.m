@@ -83,7 +83,7 @@ figure(4)
 plotDiagnostics(mdl,'leverage','Marker','o');xlabel('Indice fila');ylabel('leverage')
 
 
-%% Analisis soimulataneo liverage y residuos estudentizados, para identificar outlayers y highliberage points a la vez
+%% Analisis simulataneo liverage y residuos estudentizados, para identificar outliers y highliverage points a la vez
 figure(3)
 plot(mdl.Diagnostics.Leverage,mdl.Residuals.Studentized,'ko');ylabel('Residuos estudentizados');xlabel('Leverage');
 
