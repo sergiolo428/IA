@@ -7,14 +7,6 @@ function Template_T2_E6
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% a 
-% b 
-% c signo pendiente
-% con predict con un valor de predictor 98
-% intervalos de confianza respuesta
-% scatter, y recta de regresion
-
-
 % Cargar base de datos
 
 load("Auto.mat");
