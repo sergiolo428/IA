@@ -17,15 +17,15 @@ disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 fprintf('\n\n')
 
 
-% Apartado 1 - Ajustar un modelo de regresion lineal multiple para predecir Sales en funcion de
-% Price, Urban y US. 
+% Apartado 1 - Ajustar un modelo de regresion lineal multiple para predecir 
+% Sales en funcion de Price, Urban y US. 
 
 % Por medio de notación Wilkinson
 
 
 
-% Apartado 2 - Interpreta cada coeficiente de regresión del modelo. Ten en cuenta que algunas
-% variables incorporadas en el modelo son cualitativas.
+% Apartado 2 - Interpreta cada coeficiente de regresión del modelo. 
+% Ten en cuenta que algunas variables incorporadas en el modelo son cualitativas.
 
 % Respuesta:
 % Predictor Price ->  
@@ -35,7 +35,8 @@ fprintf('\n\n')
 % Predictor US_No -> 
 
 
-% Apartado 3 - ¿Para qué predictores se puede rechazar la hipótesis nula H0 : Bj = 0?
+% Apartado 3 - ¿Para qué predictores se puede rechazar la hipótesis 
+% nula H0 : Bj = 0?
 
 % Respuesta:
 %
@@ -50,10 +51,10 @@ fprintf('\n\n')
 % Respuesta:
 % 
 
-% Apartado 6 - Usando el modelo del apartado 4, obtener los intervalos de confianza del 95% para
-% los coeficientes de regresión.
+% Apartado 6 - Usando el modelo del apartado 4, obtener los intervalos de 
+% confianza del 95% para los coeficientes de regresión.
 
 
 
-% Apartado 7 - ¿Existe presencia de observaciones con valores at´ıpicos o con influencia (leverage)
-% inusualmente alta?
+% Apartado 7 - ¿Existe presencia de observaciones con valores at´ıpicos 
+% o con influencia (leverage) inusualmente alta?
