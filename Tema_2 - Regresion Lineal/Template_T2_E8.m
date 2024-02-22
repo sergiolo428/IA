@@ -22,7 +22,7 @@ fprintf('\n\n')
 
 % Por medio de notación Wilkinson
 
-
+mdl_01=fitlm(Carseats,'Sales+Price+Urban+US','CategoricalVars',[7 10 11])
 
 % Apartado 2 - Interpreta cada coeficiente de regresión del modelo. 
 % Ten en cuenta que algunas variables incorporadas en el modelo son cualitativas.
