@@ -30,7 +30,9 @@ Auto2(isnan(Auto2.horsepower),:)=[];
 
 num = 8;
 
-% Quitar comment para ejecutar
+%Quitar comment para ejecutar
+
+
 % figure(1);
 % for i=1:num
 %     for j=1:num
