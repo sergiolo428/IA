@@ -30,7 +30,6 @@ Y = Boston.medv;
 
 mdl_2 = fitlm(X,Y,'VarNames',var_names);
 
-
 % Ajustar RLM par apredecir medv en base a todos menos age
 
 X = Boston{:,[1:6 8:size(Boston,2)-1]};
@@ -49,7 +48,6 @@ X1 = Boston.lstat;
 X2 = Boston.age;
 X3 = X1.*X2;
 
-
 mdl_4 = fitlm([X1 X2 X3],Y,'VarNames',{var_names{[13 7]},'lstat x age',var_names{14}});
 
 % Problema linealidad
@@ -62,7 +60,6 @@ X2 = X1.*X1;
 mdl_5 = fitlm([X1 X2],Y,'VarNames',{var_names{13},'lstat x lstat',var_names{14}});
 
 mdl_6 = fitlm(X1,Y,'VarNames',{var_names{[13 14]}});
-
 
 %% Ploteamos datos y modelos de regresion
 [~,pos]=sort(X1);

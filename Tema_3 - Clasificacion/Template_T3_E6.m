@@ -1,4 +1,8 @@
 function Template_T3_E6
+acc_RL = 0;
+acc_LDA = 0;
+acc_QDA = 0;
+acc_KNN = 0;
 % Este script contiene la resolución del ejercicio aplicado 6 del Tema 3
 % de la asignatura 'Técnicas de Inteligencia Artificial'
 
@@ -11,6 +15,9 @@ function Template_T3_E6
 
 % Cargamos base de datos
 
+load("Weekly.mat");
+
+%% HACER  EJERS 1 2 3 4 
 
 disp('%%%%%%%%%%%%%%%%% EJERCICIO 6 %%%%%%%%%%%%%%%%%');
 disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
@@ -22,13 +29,25 @@ disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 % Apartado 1 - Producir resúmenes numéricos y gráficos de la base de 
 % datos Weekly. ¿Existe algún patrón?
 
+var_names = Weekly.Properties.VariableNames;
 
 % Scatters de las variables cuantitativas (todas menos Direction)
 
+% [~,b]=plotmatrix(Weekly{:,1:end-1});
+% for i=1:length(var_names)-1
+% 
+%     axes(b(i,1));ylabel(var_names{i});
+%     axes(b(end,i));xlabel(var_names{i});
+% end
+
+%%% Relaciones posibles: Volume y Year
 
 % Medimos correlación entre variables cuantitativas (todas menos Direction)
 
+corr(Weekly{:,1:end-1})
 
+%%% Mirando las correlaciones, observamos que efectivamente hay una 
+%%% correlacion entre Volume y Year es de 0.8419
 
 fprintf('\n')
 disp('%%%%%%%%%%%%%%%%% Apartado 2 %%%%%%%%%%%%%%%%%');
@@ -38,7 +57,21 @@ disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 % Volume. ¿Es alguno de los predictores estadísticamente significativo? 
 % En caso afirmativo, identifícalos.
 
+Y(strcmp(Weekly.Direction,'Down'))=0;
+Y(strcmp(Weekly.Direction,'Up'))=1;
+Y=Y';
 
+var_sel = 2:7;
+
+X = Weekly{:,2:7};
+
+mdl = fitglm(X,Y,'Distribution','binomial','VarNames',var_names([var_sel end]))
+
+% Analizando el modelo podemos ver que el p-valor asociado al Chi^2 es
+% menor que 0.05 , es decir, hay lamenos un predictor que si tiene relacion
+% con la variable a predecir
+
+% En este caso vemos que Lag2 tiene un p-valor de 0.029
 
 fprintf('\n')
 disp('%%%%%%%%%%%%%%%%% Apartado 3 %%%%%%%%%%%%%%%%%');
@@ -125,8 +158,10 @@ disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 rng(1);
 
 
-fprintf('\n PRECISIONES DE LOS MODELOS \n')
-fprintf('\n RL: %4.1f%% \n',acc_RL);
-fprintf('\n LDA: %4.1f%% \n',acc_LDA);
-fprintf('\n QDA: %4.1f%% \n',acc_QDA);
-fprintf('\n KNN: %4.1f%% \n',acc_KNN);
+fprintf('\nPRECISIONES DE LOS MODELOS \n')
+fprintf('RL: %4.1f%% \n',acc_RL);
+fprintf('LDA: %4.1f%% \n',acc_LDA);
+fprintf('QDA: %4.1f%% \n',acc_QDA);
+fprintf('KNN: %4.1f%% \n',acc_KNN);
+
+end
