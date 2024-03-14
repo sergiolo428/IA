@@ -6,6 +6,13 @@ acc_KNN = 0;
 % Este script contiene la resolución del ejercicio aplicado 6 del Tema 3
 % de la asignatura 'Técnicas de Inteligencia Artificial'
 
+
+
+
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% EJERCICIO 6 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -61,11 +68,11 @@ Y(strcmp(Weekly.Direction,'Down'))=0;
 Y(strcmp(Weekly.Direction,'Up'))=1;
 Y=Y';
 
-var_sel = 2:7;
+var_sel = 2:6;
 
-X = Weekly{:,2:7};
+X = Weekly{:,2:6};
 
-mdl = fitglm(X,Y,'Distribution','binomial','VarNames',var_names([var_sel end]))
+mdl = fitglm(X,Y,'Distribution','binomial','VarNames',var_names([var_sel end]));
 
 % Analizando el modelo podemos ver que el p-valor asociado al Chi^2 es
 % menor que 0.05 , es decir, hay almenos un predictor que si tiene relacion
@@ -84,18 +91,15 @@ Yprob = predict(mdl,X);
 Ypred(Yprob>=0.5)=1;
 Ypred(Yprob<0.5)=0;
 
-C = confusionmat(Y,Ypred)
-confusionchart(C,{'Down (0)','Up (1)'})
+figure(1)
+C = confusionmat(Y,Ypred);
+confusionchart(C,{'Down (0)','Up (1)'});
 
-acc1 = 100*(C(1,2)+C(2,2))/length(Ypred)
+acc1 = 100*(C(1,1)+C(2,2))/length(Ypred);
 err1 = 100-acc1;
 
-% Fijandonos en la matriz, een la segunda columna veremos los valores
-% acertados, es decir los que originalmente en nuestro datos tenian un
-% valor y al predecir obtuvimos le mismo, en este caso 430 bajando, y 557
-% subienedo. Por otro lado vemos que en la prediccion 48 se han
-% categorizado como Down cuando en realidad eran Up, y 54 eran Down pero se
-% situaron como Up.
+% Fijandonos en la matriz vemos que hay un numero considerable de falsos
+% positivos, es por ello por lo que tenemos un 56% de acierto.
 
 fprintf('\n')
 disp('%%%%%%%%%%%%%%%%% Apartado 4 %%%%%%%%%%%%%%%%%');
@@ -105,31 +109,31 @@ disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 % como único predictor. Calcula la matriz de confusión y el porcentaje de predicciones 
 % correctas para los datos de test (observaciones desde 2009 a 2010).
 
-pos_train2 = Weekly.Year<2008;
-pos_test2 = Weekly.Year>=2008;
+pos_train = Weekly.Year<2008;
+pos_test = Weekly.Year>=2008;
 
-Xtrain2 = Weekly{pos_train2,3};
-Xtest2 = Weekly{pos_test2,3};
+Xtrain = Weekly{pos_train,3};
+Xtest = Weekly{pos_test,3};
 
-Ytrain2 = Y(pos_train2);
-YtrueTest2 = Y(pos_test2);
+Ytrain = Y(pos_train);
+YtrueTest = Y(pos_test);
 
-mdl = fitglm(Xtrain2,Ytrain2,'Distribution','binomial','VarNames',var_names([3 9]));
+mdl = fitglm(Xtrain,Ytrain,'Distribution','binomial','VarNames',var_names([3 9]));
 
-Yprob2 = predict(mdl,Xtest2);
+Yprob2 = predict(mdl,Xtest);
 
-Ypred2(Yprob2>=0.5)=0;
-Ypred2(Yprob2<0.5)=1;
+Ypred2(Yprob2>=0.5)=1;
+Ypred2(Yprob2<0.5)=0;
 
-C = confusionmat(YtrueTest2,Ypred2)
+figure(2)
+C = confusionmat(YtrueTest,Ypred2)
 confusionchart(C,{'Down (0)','Up (1)'})
 
-acc2 = 100*(C(1,1)+C(2,1))/length(YtrueTest2)
+acc2 = 100*(C(1,1)+C(2,2))/length(YtrueTest)
 err2 = 100-acc2;
 
-% Podeemos observar como en este caso hemos obtenido un beneficio de un 2%
-% de acieerto, pasando de un 90% con todos los preditores a un 92% usando
-% unicamente Log2.
+% Podeemos observar como en este caso obeservamos un caso parecido al
+% ejemplo anterior, peero esta vez con un porcentaje de 55%
 
 fprintf('\n')
 disp('%%%%%%%%%%%%%%%%% Apartado 5 %%%%%%%%%%%%%%%%%');
@@ -139,7 +143,29 @@ disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 % como único predictor. Calcula la matriz de confusión y el porcentaje de predicciones 
 % correctas para los datos de test (observaciones desde 2009 a 2010).
 
+pos_train = Weekly.Year<2008;
+pos_test = Weekly.Year>=2008;
 
+Xtrain = Weekly{pos_train,3};
+Xtest = Weekly{pos_test,3};
+
+Ytrain = Y(pos_train);
+YtrueTest = Y(pos_test);
+
+mdl_ALD = fitcdiscr(Xtrain,Ytrain,'PredictorNames',var_names{3},'ResponseName',var_names{9})
+
+mdl_ALD.Sigma
+
+mdl_ALD.Mu
+
+[ypred,yprob,~] = predict(mdl_ALD,Xtest);
+
+figure(3)
+C = confusionmat(YtrueTest,ypred);
+confusionchart(C,{'Down (0)','Up (1)'});
+
+acc = 100*(C(1,1)+C(2,2))/length(YtrueTest);
+err = 100-acc;
 
 fprintf('\n')
 disp('%%%%%%%%%%%%%%%%% Apartado 6 %%%%%%%%%%%%%%%%%');
