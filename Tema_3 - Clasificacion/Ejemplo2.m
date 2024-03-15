@@ -64,6 +64,8 @@ mdl.Mu;
 % ypred, por defecto le coloca a la matriz de probabilidades y le aplica
 % una matriz de probabilidades, esta es la que nos vale
 
+figure(1)
+title("ALD")
 C = confusionmat(Ytest,ypred);
 confusionchart(C,{'Down (0)','Up (1)'});
 
@@ -82,6 +84,8 @@ mdl = fitcdiscr(Xtrain,Ytrain,'DiscrimType','quadratic','PredictorNames',var_nam
 
 [ypred,yprob,~] = predict(mdl,Xtest);
 
+figure(2)
+title("ACD")
 C = confusionmat(Ytest,ypred);
 confusionchart(C,{'Down (0)','Up (1)'});
 
@@ -95,6 +99,8 @@ mdl_KNN = fitcknn(Xtrain,Ytrain,'NumNeighbors',1,'Standardize',1,'PredictorNames
 
 [ypred,yprob,~] = predict(mdl_KNN,Xtest);
 
+figure(3)
+title("KNN-1")
 C = confusionmat(Ytest,ypred);
 confusionchart(C,{'Down (0)','Up (1)'});
 

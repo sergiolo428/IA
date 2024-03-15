@@ -1,11 +1,11 @@
 function Template_T3_E6
 acc_RL = 0;
-acc_LDA = 0;
-acc_QDA = 0;
+acc_ALD = 0;
+acc_ACD = 0;
 acc_KNN = 0;
-
 % Este script contiene la resolución del ejercicio aplicado 6 del Tema 3
 % de la asignatura 'Técnicas de Inteligencia Artificial'
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% EJERCICIO 6 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -112,19 +112,17 @@ Xtest = Weekly{pos_test,3};
 Ytrain = Y(pos_train);
 YtrueTest = Y(pos_test);
 
-mdl = fitglm(Xtrain,Ytrain,'Distribution','binomial','VarNames',var_names([3 9]));
-
-Yprob2 = predict(mdl,Xtest);
-
-Ypred2(Yprob2>=0.5)=1;
-Ypred2(Yprob2<0.5)=0;
+mdl_RL = fitglm(Xtrain,Ytrain,'Distribution','binomial','VarNames',var_names([3 9]));
+Yprob_RL = predict(mdl_RL,Xtest);
+Ypred_RL(Yprob_RL>=0.5)=1;
+Ypred_RL(Yprob_RL<0.5)=0;
 
 figure(2)
-C = confusionmat(YtrueTest,Ypred2)
+C = confusionmat(YtrueTest,Ypred_RL)
 confusionchart(C,{'Down (0)','Up (1)'})
 
-acc2 = 100*(C(1,1)+C(2,2))/length(YtrueTest)
-err2 = 100-acc2;
+acc_RL = 100*(C(1,1)+C(2,2))/length(YtrueTest)
+err_RL = 100-acc_RL;
 
 % Podeemos observar como en este caso obeservamos un caso parecido al
 % ejemplo anterior, peero esta vez con un porcentaje de 55%
@@ -146,20 +144,20 @@ Xtest = Weekly{pos_test,3};
 Ytrain = Y(pos_train);
 YtrueTest = Y(pos_test);
 
-mdl_ALD = fitcdiscr(Xtrain,Ytrain,'PredictorNames',var_names{3},'ResponseName',var_names{9})
+mdl_ALD = fitcdiscr(Xtrain,Ytrain,'PredictorNames',var_names{3},'ResponseName',var_names{9});
 
 mdl_ALD.Sigma
 
 mdl_ALD.Mu
 
-[ypred,yprob,~] = predict(mdl_ALD,Xtest);
+[ypred_ALD,yprob_ALD,~] = predict(mdl_ALD,Xtest);
 
 figure(3)
-C = confusionmat(YtrueTest,ypred);
+C = confusionmat(YtrueTest,ypred_ALD);
 confusionchart(C,{'Down (0)','Up (1)'});
 
-acc = 100*(C(1,1)+C(2,2))/length(YtrueTest);
-err = 100-acc;
+acc_ALD = 100*(C(1,1)+C(2,2))/length(YtrueTest);
+err_ALD = 100-acc_ALD;
 
 fprintf('\n')
 disp('%%%%%%%%%%%%%%%%% Apartado 6 %%%%%%%%%%%%%%%%%');
@@ -169,15 +167,17 @@ disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 % como único predictor. Calcula la matriz de confusión y el porcentaje de predicciones 
 % correctas para los datos de test (observaciones desde 2009 a 2010).
 
-mdl = fitcdiscr(Xtrain,Ytrain,'DiscrimType','quadratic','PredictorNames',var_names([var_sel]),'ResponseName',var_names{end});
+mdl_ACD = fitcdiscr(Xtrain,Ytrain,'DiscrimType','quadratic','PredictorNames',var_names{3},'ResponseName',var_names{end});
 
-[ypred,yprob,~] = predict(mdl,Xtest);
+[ypred_ACD,yprob_ACD,~] = predict(mdl_ACD,Xtest);
 
-C = confusionmat(YtrueTest,ypred);
+figure(4)
+C = confusionmat(YtrueTest,ypred_ACD);
 confusionchart(C,{'Down (0)','Up (1)'});
 
-acc = 100*(C(1,1)+C(2,2))/length(Ytest);
-err = 100-acc;
+acc_ACD = 100*(C(1,1)+C(2,2))/length(YtrueTest);
+err_ACD = 100-acc_ACD;
+
 
 fprintf('\n')
 disp('%%%%%%%%%%%%%%%%% Apartado 7 %%%%%%%%%%%%%%%%%');
@@ -188,17 +188,25 @@ disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 % correctas para los datos de test (observaciones desde 2009 a 2010).
 rng(1);% Controlamos la semilla para la creación de números aleatorios
 
+mdl_KNN = fitcknn(Xtrain,Ytrain,'NumNeighbors',1,'Standardize',1,'PredictorNames',var_names{3},'ResponseName',var_names{end});
 
+[ypred_KNN,yprob_KNN,~] = predict(mdl_KNN,Xtest);
+
+figure(5)
+C = confusionmat(YtrueTest,ypred_KNN);
+confusionchart(C,{'Down (0)','Up (1)'});
+
+acc_KNN = 100*(C(1,1)+C(2,2))/length(YtrueTest);
+err_KNN = 100-acc_KNN;
 
 fprintf('\n')
 disp('%%%%%%%%%%%%%%%%% Apartado 8 %%%%%%%%%%%%%%%%%');
 disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 % Apartado 8 - ¿Cuál de los métodos parece obtener mejores resultados?
 % Respuesta
-% El ALD y la regresión logística presentan los mejores resultados. El 1-NN
-% y QDA presentan resultados pobres. En este escenario un umbral de
-% decisión de bayes lineal parece ser lo acertado.
 
+% Podemos apreciar que RL y ALD serian los mejores ajustes que podriamos
+% usar para esta base de datos.
 
 
 fprintf('\n')
@@ -211,24 +219,233 @@ disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 % experimentar con diferentes valores de $K$ para el clasificador KNN.
 
 
-
 % RL
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Log 1 2
+Xtrain = Weekly{pos_train,[2 3]};
+Xtest = Weekly{pos_test,[2 3]};
 
-% LDA
+mdl_RL = fitglm(Xtrain,Ytrain,'Distribution','binomial','VarNames',var_names([2 3 9]));
+Yprob_RL = predict(mdl_RL,Xtest);
+Ypred_RL(Yprob_RL>=0.5)=1;
+Ypred_RL(Yprob_RL<0.5)=0;
 
+C = confusionmat(YtrueTest,Ypred_RL);
 
-% QDA
+acc_RL12 = 100*(C(1,1)+C(2,2))/length(YtrueTest)
+err_RL12 = 100-acc_RL12;
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Log 2 3
+Xtrain = Weekly{pos_train,[3 4]};
+Xtest = Weekly{pos_test,[3 4]};
 
+mdl_RL = fitglm(Xtrain,Ytrain,'Distribution','binomial','VarNames',var_names([3 4 9]));
+Yprob_RL = predict(mdl_RL,Xtest);
+Ypred_RL(Yprob_RL>=0.5)=1;
+Ypred_RL(Yprob_RL<0.5)=0;
+
+C = confusionmat(YtrueTest,Ypred_RL);
+
+acc_RL23 = 100*(C(1,1)+C(2,2))/length(YtrueTest)
+err_RL23 = 100-acc_RL23;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Log 2 4
+Xtrain = Weekly{pos_train,[3 5]};
+Xtest = Weekly{pos_test,[3 5]};
+
+mdl_RL = fitglm(Xtrain,Ytrain,'Distribution','binomial','VarNames',var_names([3 5 9]));
+Yprob_RL = predict(mdl_RL,Xtest);
+Ypred_RL(Yprob_RL>=0.5)=1;
+Ypred_RL(Yprob_RL<0.5)=0;
+
+C = confusionmat(YtrueTest,Ypred_RL);
+
+acc_RL24 = 100*(C(1,1)+C(2,2))/length(YtrueTest)
+err_RL24 = 100-acc_RL24;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Log 2 5
+Xtrain = Weekly{pos_train,[3 6]};
+Xtest = Weekly{pos_test,[3 6]};
+
+mdl_RL = fitglm(Xtrain,Ytrain,'Distribution','binomial','VarNames',var_names([3 6 9]));
+Yprob_RL = predict(mdl_RL,Xtest);
+Ypred_RL(Yprob_RL>=0.5)=1;
+Ypred_RL(Yprob_RL<0.5)=0;
+
+C = confusionmat(YtrueTest,Ypred_RL);
+
+acc_RL25 = 100*(C(1,1)+C(2,2))/length(YtrueTest)
+err_RL25 = 100-acc_RL25;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ALD
+
+%Log 1 2
+Xtrain = Weekly(pos_train,[2 3]);
+Xtest = Weekly{pos_test,[2 3]};
+
+mdl_ALD = fitcdiscr(Xtrain,Ytrain,'PredictorNames',var_names([2 3]),'ResponseName',var_names{9});
+
+[ypred_ALD,yprob_ALD,~] = predict(mdl_ALD,Xtest);
+
+C = confusionmat(YtrueTest,ypred_ALD);
+
+acc_ALD12 = 100*(C(1,1)+C(2,2))/length(YtrueTest);
+err_ALD12 = 100-acc_ALD12;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Log 2 3
+Xtrain = Weekly{pos_train,[3 4]};
+Xtest = Weekly(pos_test,[3 4]);
+
+mdl_ALD = fitcdiscr(Xtrain,Ytrain,'PredictorNames',var_names([3 4]),'ResponseName',var_names{9});
+
+[ypred_ALD,yprob_ALD,~] = predict(mdl_ALD,Xtest);
+
+C = confusionmat(YtrueTest,ypred_ALD);
+
+acc_ALD23 = 100*(C(1,1)+C(2,2))/length(YtrueTest);
+err_ALD23 = 100-acc_ALD23;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Log 2 4
+Xtrain = Weekly{pos_train,[3 5]};
+Xtest = Weekly(pos_test,[3 5]);
+
+mdl_ALD = fitcdiscr(Xtrain,Ytrain,'PredictorNames',var_names([3 5]),'ResponseName',var_names{9});
+
+[ypred_ALD,yprob_ALD,~] = predict(mdl_ALD,Xtest);
+
+C = confusionmat(YtrueTest,ypred_ALD);
+
+acc_ALD24 = 100*(C(1,1)+C(2,2))/length(YtrueTest);
+err_ALD24 = 100-acc_ALD24;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Log 2 5
+Xtrain = Weekly{pos_train,[3 6]};
+Xtest = Weekly(pos_test,[3 6]);
+
+mdl_ALD = fitcdiscr(Xtrain,Ytrain,'PredictorNames',var_names([3 6]),'ResponseName',var_names{9});
+
+[ypred_ALD,yprob_ALD,~] = predict(mdl_ALD,Xtest);
+
+C = confusionmat(YtrueTest,ypred_ALD);
+
+acc_ALD25 = 100*(C(1,1)+C(2,2))/length(YtrueTest);
+err_ALD25 = 100-acc_ALD25;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% ACD
+%Log 2 4
+Xtrain = Weekly{pos_train,[3 5]};
+Xtest = Weekly(pos_test,[3 5]);
+
+mdl_ACD = fitcdiscr(Xtrain,Ytrain,'DiscrimType','quadratic','PredictorNames',var_names([3 5]),'ResponseName',var_names{end});
+
+[ypred_ACD,yprob_ACD,~] = predict(mdl_ACD,Xtest);
+
+figure(4)
+C = confusionmat(YtrueTest,ypred_ACD);
+confusionchart(C,{'Down (0)','Up (1)'});
+
+acc_ACD24 = 100*(C(1,1)+C(2,2))/length(YtrueTest);
+err_ACD24 = 100-acc_ACD24;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % KNN
+%Log 2 4 _1
+
 rng(1);
 
+Xtrain = Weekly{pos_train,[3 5]};
+Xtest = Weekly(pos_test,[3 5]);
+
+mdl_KNN = fitcknn(Xtrain,Ytrain,'NumNeighbors',1,'Standardize',1,'PredictorNames',var_names([3 5]),'ResponseName',var_names{end});
+
+[ypred_KNN,yprob_KNN,~] = predict(mdl_KNN,Xtest);
+
+C = confusionmat(YtrueTest,ypred_KNN);
+
+acc_KNN24_1 = 100*(C(1,1)+C(2,2))/length(YtrueTest);
+err_KNN24_1 = 100-acc_KNN24_1;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Log 2 4 _2
+
+rng(1);
+
+Xtrain = Weekly{pos_train,[3 5]};
+Xtest = Weekly(pos_test,[3 5]);
+
+mdl_KNN = fitcknn(Xtrain,Ytrain,'NumNeighbors',2,'Standardize',1,'PredictorNames',var_names([3 5]),'ResponseName',var_names{end});
+
+[ypred_KNN,yprob_KNN,~] = predict(mdl_KNN,Xtest);
+
+C = confusionmat(YtrueTest,ypred_KNN);
+
+acc_KNN24_2 = 100*(C(1,1)+C(2,2))/length(YtrueTest);
+err_KNN24_2 = 100-acc_KNN24_2;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Log 2 4 _5
+
+rng(1);
+
+Xtrain = Weekly{pos_train,[3 5]};
+Xtest = Weekly(pos_test,[3 5]);
+
+mdl_KNN = fitcknn(Xtrain,Ytrain,'NumNeighbors',5,'Standardize',1,'PredictorNames',var_names([3 5]),'ResponseName',var_names{end});
+
+[ypred_KNN,yprob_KNN,~] = predict(mdl_KNN,Xtest);
+
+C = confusionmat(YtrueTest,ypred_KNN);
+
+acc_KNN24_5 = 100*(C(1,1)+C(2,2))/length(YtrueTest);
+err_KNN24_5 = 100-acc_KNN24_5;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 fprintf('\nPRECISIONES DE LOS MODELOS \n')
 fprintf('RL: %4.1f%% \n',acc_RL);
-fprintf('LDA: %4.1f%% \n',acc_LDA);
-fprintf('QDA: %4.1f%% \n',acc_QDA);
-fprintf('KNN: %4.1f%% \n',acc_KNN);
+fprintf('RL12: %4.1f%% \n',acc_RL12);
+fprintf('RL23: %4.1f%% \n',acc_RL23);
+fprintf('RL24: %4.1f%% \n',acc_RL24);
+fprintf('RL25: %4.1f%% \n',acc_RL25);
+
+fprintf('\n');
+
+fprintf('ALD: %4.1f%% \n',acc_ALD);
+fprintf('ALD12: %4.1f%% \n',acc_ALD12);
+fprintf('ALD23: %4.1f%% \n',acc_ALD23);
+fprintf('ALD24: %4.1f%% \n',acc_ALD24);
+fprintf('ALD25: %4.1f%% \n',acc_ALD25);
+
+fprintf('\n');
+
+fprintf('ACD: %4.1f%% \n',acc_ACD);
+fprintf('ACD24: %4.1f%% \n',acc_ACD24);
+
+fprintf('\n');
+
+fprintf('KNN: %4.1f%% \n',100-acc_KNN);
+fprintf('KNN24_1: %4.1f%% \n',acc_KNN24_1);
+fprintf('KNN24_2: %4.1f%% \n',acc_KNN24_2);
+fprintf('KNN24_5: %4.1f%% \n',100-acc_KNN24_5);
+
+fprintf('\n');
+
+% Viendo los resultados a pesar de que en un principio RL y LD eran las
+% mejore sopciones, podemos observar como  con KNN para K=2 obtenemos casi
+% un 60% 
+
 
 end
