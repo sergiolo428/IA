@@ -3,15 +3,9 @@ acc_RL = 0;
 acc_LDA = 0;
 acc_QDA = 0;
 acc_KNN = 0;
+
 % Este script contiene la resolución del ejercicio aplicado 6 del Tema 3
 % de la asignatura 'Técnicas de Inteligencia Artificial'
-
-
-
-
-
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% EJERCICIO 6 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -175,7 +169,15 @@ disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 % como único predictor. Calcula la matriz de confusión y el porcentaje de predicciones 
 % correctas para los datos de test (observaciones desde 2009 a 2010).
 
+mdl = fitcdiscr(Xtrain,Ytrain,'DiscrimType','quadratic','PredictorNames',var_names([var_sel]),'ResponseName',var_names{end});
 
+[ypred,yprob,~] = predict(mdl,Xtest);
+
+C = confusionmat(YtrueTest,ypred);
+confusionchart(C,{'Down (0)','Up (1)'});
+
+acc = 100*(C(1,1)+C(2,2))/length(Ytest);
+err = 100-acc;
 
 fprintf('\n')
 disp('%%%%%%%%%%%%%%%%% Apartado 7 %%%%%%%%%%%%%%%%%');
