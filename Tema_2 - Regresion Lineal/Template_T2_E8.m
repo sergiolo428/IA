@@ -1,4 +1,4 @@
-function Template_T2_E8
+% function Template_T2_E8
 % Este script contiene la resolución del ejercicio aplicado 8 del Tema 2
 % de la asignatura 'Técnicas de Inteligencia Artificial'
 
