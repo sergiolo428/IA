@@ -42,14 +42,12 @@ B = ridge(Y,X,lambda_grid,0);
 % standarizar los valores para el modelo que nos devuelva lso valores 
 % originales para despuer plotearlos
 
-
 subplot(211);plot(lambda_grid,B(2:end,:),'LineWidth',2);
 
 grid on;
 xlabel('Lambda');
 ylabel('Coeficientes');
 title('RIDGE REGRESSION');
-
 
 % Creamos matriz de valores posible para lambda LASSO
 % (Creamos una matriz de lambdas)
@@ -69,12 +67,10 @@ xlabel('Lambda');
 ylabel('Coeficientes');
 title('LASSO');%pause;close;
 
-
 % Dividimos la base de datos en train y test
 rng(1); % Fijamos semilla para la generación de números aleatorios
 
 asdasd = size(X,10);
-
 
 %% Partición no estratificada 50% train y 50% test
 hpartition = cvpartition(size(X,1),"HoldOut",0.5);
@@ -90,13 +86,11 @@ MSE_test = mean((Y(pos_test)-ypred).^2);
 fprintf('\nMSE test (RIDGE, lambda = %.1f) = %.0f \n',lambda,MSE_test);
 fprintf('MSE test del modelo nulo = %.0f \n',mean((mean(Y(pos_train))-Y(pos_test)).^2));
 
-
 lambda = 10^10;
 
 B = ridge(Y(pos_train),X(pos_train,:),lambda,0);
 ypred = B(1)+X(pos_test,:)*B(2:end);
 MSE_test = mean((Y(pos_test)-ypred).^2);
-
 
 fprintf('MSE test (RIDGE, lambda = %.0f) = %.0f \n',lambda,MSE_test);
 
@@ -105,7 +99,6 @@ lambda = 0;
 B = ridge(Y(pos_train),X(pos_train,:),lambda,0);
 ypred = B(1)+X(pos_test,:)*B(2:end);
 MSE_test = mean((Y(pos_test)-ypred).^2);
-
 
 fprintf('MSE test (RIDGE, lambda = %.0f) = %.0f \n',lambda,MSE_test);
 
@@ -125,7 +118,6 @@ ypred = FitInfo.Intercept+X(pos_test,:)*B;
 MSE_test_LASSO = mean((Y(pos_test)-ypred).^2);
 
 fprintf('\nMSE test (LASSO, lambda = %.0f) = %.0f \n',lambda,MSE_test_LASSO);
-
 
 % Usamos ahora 10 FOLD CV en entrenamiento para seleccionar lambda óptima
 % Creamos particiones
@@ -207,5 +199,57 @@ fprintf('\n LASSO, CV lambda = %.2f, el error de test = %4.0f \n',lambda_LASSO,M
 B = ridge(Y,X,lambda_RIDGE,0);
 
 [B,FitInfo] = lasso(X,Y,"Lambda",lambda_LASSO);
-
 [FitInfo.Intercept;B]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PCR %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+X = zscore(X);
+
+X1 = X(pos_train,:);
+X2 = X(pos_test,:);
+Y1 = Y(pos_train);
+Y2 = Y(pos_test);
+
+%%% APLICAMOS PCA %%%
+
+% PCALoaddings son todos los fis
+% PCAScores, predictores transformados (son como las Xtrain del total)
+% PCAVar --> Varianza
+
+[PCALoadings,PCAScores,PCAVar,~,explained,mu] = pca(X1);
+explained
+cumsum(explained)
+
+CV_MSE_PCR = [];
+for aa=1:k
+    pos_train_CV = c.training(aa);
+    pos_test_CV = c.test(aa);
+    Ytrain = Y1(pos_train_CV);
+    Ytest = Y1(pos_test_CV);
+   
+    for bb=1:size(X,2)
+        X_PCR_train = PCAScores(pos_train_CV,1:bb);
+        X_PCR_test = PCAScores(pos_test_CV,1:bb);
+
+        mdl = fitlm(X_PCR_train,Ytrain);
+        CV_MSE_PCR(aa,bb) = mean((Ytest-predict(mdl,X_PCR_test)).^2);
+        
+    end
+
+end
+
+[val,pos] = min(mean(CV_MSE_PCR));
+plot(mean(CV_MSE_PCR))
+hold on;plot(pos,val);hold off;
+xlabel('M');ylabel('CV MSE');
+
+mdl = fitlm(PCAScores(:,1:pos),Y1);
+
+X_PCR_test = (X2-mu)*PCALoadings(:,1:pos);
+
+MSE_test_PCR=mean((Y2-predict(mdl,X_PCR_test)).^2)
+
+[PCALoadings,PCAScores,PCAVar,~,explained,mu] = pca(X,'NumComponents',pos);
+mdl_final = fitlm(PCAScores,Y);
+
+
