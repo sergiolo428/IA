@@ -23,10 +23,10 @@ var_names=College.Properties.VariableNames;
 % X-Dummy -> 2 
 
 Dum = dummyvar(categorical(College{:,2}));
-Dum = Dum(:,2);
+Dummy = Dum(:,2);
 
 Y = College{:,3};
-X = [Dum College{:,4:19}];
+X = [Dummy College{:,4:19}];
 var_names_x = [var_names(2) var_names(4:19)];
 
 % Predecir Apps

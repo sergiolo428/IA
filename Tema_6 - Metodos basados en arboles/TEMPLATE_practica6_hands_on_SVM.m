@@ -7,25 +7,30 @@ disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 
 %Generamos 2 predictores aleatorios normalmente distribuidos
 rng(6)
-
+len = 20;
+x = randn(len,2);
+y = [-1*ones(len/2,1);ones(len/2,1)];
+x(y==1,:) = x(y==1,:)+1;
 % Scatter
 plot(x(y==-1,1),x(y==-1,2),'o','MarkerSize',6,'MarkerEdgeColor','b','MarkerFaceColor','b');
 hold on;plot(x(y==1,1),x(y==1,2),'o','MarkerSize',6,'MarkerEdgeColor','r','MarkerFaceColor','r');
 xlabel('x(:,1)');ylabel('x(:,2)');title('SVC   C=10');v=axis;pause;
 
 % Ajustamos SVM con kernel lineal (SVC) a los datos C=10
-
+SVMModel = fitcsvm(x,y,"BoxConstraint",10,"KernelFunction","linear");
 % Dibujamos umbral de decisión
     % Beta y bias
+    beta = SVMModel.Beta;
+    bias = SVMModel.Bias;
 
     % Despejar x2
-    x2_pred [];
+    x2_pred = -(bias+beta(1)*x(:,1))/beta(2);
 
     plot(x(:,1),x2_pred,'Linewidth',1.5);axis(v);
     pause;
 
 % Dibujamos support vectors
-sv = [];
+sv = SVMModel.SupportVectors;
 plot(sv(:,1),sv(:,2),'o','MarkerSize',10,'MarkerEdgeColor','k')
 hold off;pause;close;
 
@@ -34,6 +39,29 @@ hold off;pause;close;
 % Repetimos proceso anterior con C = 0.1 -> margen más ancho -> más
 % infracciones del margen
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Scatter
+plot(x(y==-1,1),x(y==-1,2),'o','MarkerSize',6,'MarkerEdgeColor','b','MarkerFaceColor','b');
+hold on;plot(x(y==1,1),x(y==1,2),'o','MarkerSize',6,'MarkerEdgeColor','r','MarkerFaceColor','r');
+xlabel('x(:,1)');ylabel('x(:,2)');title('SVC   C=0.1');v=axis;pause;
+
+% Ajustamos SVM con kernel lineal (SVC) a los datos C=0.1
+SVMModel = fitcsvm(x,y,"BoxConstraint",0.1,"KernelFunction","linear");
+% Dibujamos umbral de decisión
+    % Beta y bias
+    beta = SVMModel.Beta;
+    bias = SVMModel.Bias;
+
+    % Despejar x2
+    x2_pred = -(bias+beta(1)*x(:,1))/beta(2);
+
+    plot(x(:,1),x2_pred,'Linewidth',1.5);axis(v);
+    pause;
+
+% Dibujamos support vectors
+sv = SVMModel.SupportVectors;
+plot(sv(:,1),sv(:,2),'o','MarkerSize',10,'MarkerEdgeColor','k')
+hold off;pause;close;
 
 
 
