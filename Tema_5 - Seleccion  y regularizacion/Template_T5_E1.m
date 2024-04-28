@@ -59,7 +59,10 @@ mdl = fitlm(X_train,Y_train);
 
 Ypred = predict(mdl,X_test);
 
-MSE = mean((Y_test-Ypred).^2)
+
+MSE = mean((Y_test-Ypred).^2);
+
+fprintf('MSE REGRESION LINEAL: %d',MSE);
 
 fprintf('\n')
 disp('%%%%%%%%%%%%%%%%% Apartado 3 %%%%%%%%%%%%%%%%%');
@@ -94,10 +97,12 @@ for i = 1:k
     end 
 end
 
-[val,pos] = min(mean(MSE_ridge_CV))
+[val,pos] = min(mean(MSE_ridge_CV));
 
 subplot(211);plot(lambda,mean(MSE_ridge_CV,1));title('RIDGE');
 hold on;plot(lambda(pos),val,'ro');hold off;
+
+fprintf('MSE RIDGE LINEAL: %d',val);
 
 fprintf('\n')
 disp('%%%%%%%%%%%%%%%%% Apartado 4 %%%%%%%%%%%%%%%%%');
@@ -133,11 +138,12 @@ for i = 1:k
     end 
 end
 
-[val,pos] = min(mean(MSE_ridge_CV))
+[val,pos] = min(mean(MSE_ridge_CV));
 
-subplot(212);plot(lambda,mean(MSE_lasso_CV,1));title('RIDGE');
+subplot(212);plot(lambda,mean(MSE_lasso_CV,1));title('LASSO');
 hold on;plot(lambda(pos),val,'ro');hold off;
 
+fprintf('MSE LASSO LINEAL: %d',val);
 
 fprintf('\n')
 disp('%%%%%%%%%%%%%%%%% Apartado 5 %%%%%%%%%%%%%%%%%');
@@ -160,8 +166,8 @@ Y2 = Y(pos_test);
 % PCAVar --> Varianza
 
 [PCALoadings,PCAScores,PCAVar,~,explained,mu] = pca(X1);
-explained
-cumsum(explained)
+explained;
+cumsum(explained);
 k = 10;
 CV_MSE_PCR = [];
 for aa=1:k
@@ -184,7 +190,7 @@ end
 [val,pos] = min(mean(CV_MSE_PCR));
 
 figure(2)
-plot(mean(CV_MSE_PCR))
+plot(mean(CV_MSE_PCR));
 hold on;plot(pos,val);hold off;
 xlabel('M');ylabel('CV MSE');
 
@@ -192,11 +198,12 @@ mdl = fitlm(PCAScores(:,1:pos),Y1);
 
 X_PCR_test = (X2-mu)*PCALoadings(:,1:pos);
 
-MSE_test_PCR=mean((Y2-predict(mdl,X_PCR_test)).^2)
+MSE_test_PCR=mean((Y2-predict(mdl,X_PCR_test)).^2);
 
 [PCALoadings,PCAScores,PCAVar,~,explained,mu] = pca(X,'NumComponents',pos);
 mdl_final = fitlm(PCAScores,Y);
 
+fprintf('MSE PCR LINEAL: %d',MSE_test_PCR);
 
 fprintf('\n')
 disp('%%%%%%%%%%%%%%%%% Apartado 6 %%%%%%%%%%%%%%%%%');
@@ -204,3 +211,8 @@ disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 % Apartado 6 - Comentar los resultados obtenidos. ¿Cómo de precisas son 
 % nuestras predicciones del número de solicitudes recibidas? ¿Hay mucha 
 % diferencia entre los errores de test reportados en los apartados anteriores?
+
+% Parece ser que al comparar todo los modelos anteriores, tanto para Lasso
+% Ridge, y PCR obtenemos valores muy cercanos al modelo de regresion
+% lineal. Por lo que un modelo de regresion lineal seria suficiente.
+
