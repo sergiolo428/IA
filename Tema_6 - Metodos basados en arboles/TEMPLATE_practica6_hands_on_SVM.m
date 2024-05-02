@@ -63,7 +63,7 @@ sv = SVMModel.SupportVectors;
 plot(sv(:,1),sv(:,2),'o','MarkerSize',10,'MarkerEdgeColor','k')
 hold off;pause;close;
 
-
+keyboard;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Usamos 10-FOLD CV para buscar el C óptimo
@@ -83,21 +83,34 @@ for aa = 1:k
       
     % Para cada C, ajustamos y evaluamos los modelos
     for bb=1:length(C_grid)
-        
+        SVMModel  = fitcsvm(Xtrain,Ytrain,"BoxConstraint",C_grid(bb),"KernelFunction","linear");
+        label = predict(SVMModel,Xtest);
+        CV_error(aa,bb) = 100*(1-sum(label==Ytest)/length(Ytest));
+
     end
     
 end
 % Calculamos min de CV_error
+[val,pos] = min(mean(CV_error));
+
 
 
 % Entrenamos modelo con C seleccionada a través de CV
+SVMModel  = fitcsvm(x,y,"BoxConstraint",C_grid(pos),"KernelFunction","linear");
+
 
 
 % Creamos una base de datos de test
 rng(33);
-
+len = 20;
+xtest = randn(len,2);
+ytest = [-1*ones(len/2,1);ones(len/2,1)];
+xtest(ytest==1,:) = xtest(ytest==1,:)+1;
 
 % Evaluamos el modelo
+
+label = predict(SVMModel,xtest);
+acierto = 100*(sum(label==ytest)/length(ytest));
 
 
 fprintf('Precisión del SVC (C=%.3f) = %.2f \n',C_grid(pos),acierto);
@@ -110,12 +123,18 @@ pause;close;
 % Comprobamos ahora que al cambiar el C óptimo los resultados en test
 % empeoran un poco
 
+
+
+
 % Entrenamos modelo
 
+SVMModel  = fitcsvm(x,y,"BoxConstraint",0.01,"KernelFunction","linear");
+
 % Evaluamos el modelo
+label = predict(SVMModel,xtest);
+acierto = 100*(sum(label==ytest)/length(ytest));
 
-
-fprintf('Precisión del SVC (C=%.3f) = %.2f \n',C_grid(pos),acierto);
+fprintf('Precisión del SVC (C=%.3f) = %.2f \n',0.01,acierto);
 
 % Matriz de confusión
 C = confusionmat(ytest,label);
@@ -123,19 +142,19 @@ confusionchart(C,{'Clase (-1)','Clase (1)'})
 pause;close;
 
 
-
-
-
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SVM -> umbrales de decisión no lineales
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 rng(1);
 % creamos 200 observaciones de 2 predictores aleatorios normalmente distribuidos
+len = 200;
+x = randn(len,2);
+y = [ones(150,1);2*ones(50,1)];
 
 % Los primeros 150 son de clase -1 y los últimos 150 de clase 1
+
+x(1:100,:) = x(1:100,:)+2;
+x(101:150,:) = x(101:150,:)-2;
 
 % Scatter
 plot(x(y==1,1),x(y==1,2),'o','MarkerSize',6,'MarkerEdgeColor','b','MarkerFaceColor','b');
@@ -144,15 +163,26 @@ xlabel('x(:,1)');ylabel('x(:,2)');v=axis;pause;
 
 % Ajustamos SVM con kernel Gaussiano
 
+SVMModel = fitcsvm(x,y,"BoxConstraint",1,"KernelFunction","gaussian","KernelScale",1);
 
 % Ploteamos umbral de decisión
 % 1) Construimos rejilla
 
+d = 0.02;
+[x1Grid,x2Grid] = meshgrid(min(x(:,1)):d:max(x(:,1)),min(x(:,2)):d:max(x(:,2)));
+
+xGrid = [x1Grid(:),x2Grid(:)];% Coloca las columnas una detras de otra
+
+
 % 2) Usamos modelo ajustado para predecir
+
+[~,scores] = predict(SVMModel,xGrid);
 
 % 3) Visualizamos support vector y umbral de decisión
 plot(x(SVMModel.IsSupportVector,1),x(SVMModel.IsSupportVector,2),'o','MarkerSize',10,'MarkerEdgeColor','k');
 % contour
+
+contour(x1Grid,x2Grid,scores,reshape(scores(:,2),size(x1Grid)),[0 0]);axis(v);
 
 title('SVM   C=1   KS=1');
 hold off;pause;close;
@@ -166,6 +196,8 @@ pos_train = hpartition.training;
 pos_test = hpartition.test;
 
 % Ajustamos SVM con kernel Gaussiano C=1, gamma=1 en TRAIN
+
+SVMModel = fitcsvm(x(pos_train,:),y(pos_train),"BoxConstraint",1,"KernelFunction","gaussian","KernelScale",1);
 
 % Evaluamos el modelo en TEST
 label = predict(SVMModel,x(pos_test,:));
@@ -197,14 +229,22 @@ for aa = 1:k
     % Para cada combinación C - KS ajustamos y evaluamos los modelos
     for bb=1:length(C_grid)
         for cc=1:length(KS_grid)
-
-
+            
+            SVMModel = fitcsvm(Xtrain,Ytrain,"BoxConstraint",C_grid(bb),"KernelFunction","gaussian","KernelScale",KS_grid(cc));
+            
+            label = predict(SVMModel,Xtest);
+            CV_error(bb,cc,aa) = 100*(1-sum(label==Ytest)/length(Ytest));
         end
     end
     
 end
 % buscamos CV_error mínimo
 
+CV_medios = mean(CV_error,3);
+
+[val,pos] = min(CV_medios(:));
+
+[row,col] = ind2sub(size(CV_medios),pos);
 
 % Entrenamos modelo con C seleccionada a través de CV
 SVMModel = fitcsvm(x1,y1,'BoxConstraint',C_grid(row),'KernelFunction','gaussian',...
@@ -220,6 +260,8 @@ confusionchart(C,{'Clase (1)','Clase (2)'})
 pause;close;
 
 % PLoteamos curva ROC
+
+[X,Y,T,AUC,OPTROCPT] = perfcurve(y2,scores(:,2),2);
 
 plot(X,Y)
 xlabel('1 - Especificidad') 
