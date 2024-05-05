@@ -14,7 +14,6 @@ y_train = Ytrain(pos_train);
 x_test = Xtrain(pos_test,:);
 y_test = Ytrain(pos_test);
 
-
 mdl = fitlm(x_train,y_train);
 
 yprob = predict(mdl,x_test);
