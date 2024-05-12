@@ -108,7 +108,7 @@ for aa = 1:k
     tree_train = fitctree(xtrain,ytrain,'CategoricalPredictors',[6,9,10]);
 
     % Para cada alpha, ajustamos y evaluamos los modelos
-    for bb=1:length(alpha_grid)-1 %Si hay M niveles de poda, hay M+1 alphas -> la última no cogemos sería poda completa -> decir clase mayoritaria
+    for bb=1:length(alpha_grid)-1 %Si hay M niveles de poda, hay M-1 alphas -> la última no cogemos sería poda completa -> decir clase mayoritaria
         tree2 = prune(tree_train,'Alpha',alpha_grid(bb));
         label = predict(tree2,xtest);
 
@@ -117,9 +117,9 @@ for aa = 1:k
     end
 end
 
-[val,pos] = min(mean(CV_error))
+[val,pos] = min(mean(CV_error));
 tree_pruned = prune(tree,'Alpha',alpha_grid(pos));
-
+val
 % Visualizamos árbol de clasificación
 view(tree_pruned,'Mode','graph')
 

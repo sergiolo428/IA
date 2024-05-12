@@ -1,4 +1,4 @@
-function TEMPLATE_practica6_hands_on_ANN_Classification
+function TEM5PLATE_practica6_hands_on_ANN_Classification
 % Este script contiene la resolución del tutorial práctico del Tema 6 
 % (RNA para clasificación) de la asignatura 'Técnicas de Inteligencia Artificial'
 
