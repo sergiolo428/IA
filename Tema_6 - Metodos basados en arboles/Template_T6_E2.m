@@ -10,6 +10,7 @@ function Template_T6_E2
 
 % Cargamos base de datos
 
+load Auto.mat;
 
 disp('%%%%%%%%%%%%%%%%% EJERCICIO 2 %%%%%%%%%%%%%%%%%');
 disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');

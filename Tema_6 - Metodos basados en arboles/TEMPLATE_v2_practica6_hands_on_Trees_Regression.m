@@ -113,7 +113,7 @@ fprintf('RMSE (TEST) del RF = %4.2f \n\n',sqrt(MSE));
 
 % RF -> importancia de los predictores y OOB error
 rng(4);
-mdl_RF_OOB = treeBagger(100,X(pos_train,:),Y(pos_train),"Method","regression",...
+mdl_RF_OOB = TreeBagger(100,X(pos_train,:),Y(pos_train),"Method","regression",...
     "NumPredictorsToSample",4,"OOBPredictorImportance","on");
 
 imp = mdl_RF_OOB.OOBPermutedPredictorDeltaError;

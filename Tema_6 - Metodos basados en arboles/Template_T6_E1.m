@@ -102,7 +102,7 @@ end
 [val,pos] = min(mean(error));
 val
 tree_pruned_pos = prune(tree,'Alpha',alpha_grid(pos));
-
+pos
 view(tree_pruned_pos,'Mode','graph')
 
 fprintf('\n')
@@ -112,8 +112,29 @@ disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 % test obtenido?  Determina qué variables son las más importantes.
 rng(4);
 
+mdl_bagged = TreeBagger(100,X_train,Y_train,"Method","classification"...
+    ,'NumPredictorsToSample','all',"OOBPredictorImportance","on");
 
+view(mdl_bagged.Trees{1},'Mode','graph');
 
+label_bagged = predict(mdl_bagged,X_test);
+
+acierto = 100*sum(strcmp(label_bagged,Y_test))/length(Y_test);
+error = 100-acierto
+
+mdl_bagged.OOBPermutedPredictorDeltaError
+
+figure;
+bar(mdl_bagged.OOBPermutedPredictorDeltaError);
+ylabel('Importancia');
+xlabel('Predictores');
+h = gca;
+h.XTickLabel = mdl_bagged.PredictorNames;
+h.XTickLabelRotation = 45;
+h.TickLabelInterpreter = 'none';
+
+% Podemos ver como las variables 5 y 6 , Price y ShelveLoc son las mas
+% relevantes
 
 fprintf('\n')
 disp('%%%%%%%%%%%%%%%%% Apartado 5 %%%%%%%%%%%%%%%%%');
@@ -124,6 +145,46 @@ disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 % división, en la tasa de error obtenida.
 rng(4);
 
+mdl_RF = TreeBagger(100,X_train,Y_train,"Method","classification"...
+    ,'NumPredictorsToSample',4,"OOBPredictorImportance","on");
+
+label_RF = predict(mdl_bagged,X_test);
+
+acierto = 100*sum(strcmp(label_RF,Y_test))/length(Y_test);
+error = 100-acierto
 
 % Analizamos el efecto de m usando CV
 rng(4);
+
+k = 10;
+cc = cvpartition(sum(pos_train),"KFold",k);
+
+error_RF=[];
+for i= 1:k
+
+    pos_train_RF = cc.training(i);
+    pos_test_RF = cc.test(i);
+
+    X_train_RF = X_train(pos_train_RF,:);
+    X_test_RF = X_train(pos_test_RF,:);
+
+    Y_train_RF = Y_train(pos_train_RF);
+    Y_test_RF = Y_train(pos_test_RF);
+    
+    for j=1:10 % m
+
+        
+        mdl_RF = TreeBagger(50,X_train_RF,Y_train_RF,"Method","classification"...
+    ,'NumPredictorsToSample',j,"OOBPredictorImportance","on");
+        label = predict(mdl_RF,X_test_RF);
+
+        error_RF(i,j) = 100*(1-sum(strcmp(label,Y_test_RF))/length(Y_test_RF));
+
+    end
+    
+end
+
+[val,pos] = min(mean(error_RF));
+val
+mean(error_RF)
+tree_pruned_pos = prune(tree,'Alpha',alpha_grid(pos));
