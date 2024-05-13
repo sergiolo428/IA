@@ -82,11 +82,19 @@ for i=1:K
 
         % opciones de red
         net.layers{1}.transferFcn = 'logsig';
-        net.divideFcn='divideind';
+        net.divideFcn='divideind';% Por indice
+
+        % dividerand random
+        % divideblock bloques contiguos
+        % divideint intercalado
+        % divideind por indice
+
         net.divideParam.trainInd=pos_train_CV;
         net.divideParam.valInd=pos_val_CV;
         net.divideParam.testInd=pos_test_CV;
-        net.inputs{1}.processFcns{2}='mapstd';
+        net.inputs{1}.processFcns{2}='mapstd'; % Normalize inputs/targets 
+
+        % mapminmax entre -1 y 1
         
         % Train ANN
         train_net = train(net,X1',Y1');
@@ -111,7 +119,14 @@ end
 
 val
 
-% 7.81 ; 25 neuronas
+% 9.25 ; 25 neuronas k = 3
+
+% 7.81 ; 25 neuronas k = 5
+
+% 8.38 ; 15 neuronas k = 10
+
+% Nota, largo periodo de entrenamiento, error decente, cuidado con overfitear con
+% el numero de neuronas
 
 % Dibujamos errorbar
 errorbar(H_grid,mean(CV_error),std(CV_error));hold on;plot(H_grid,mean(CV_error),'ro');hold off;xlabel('#neuronas');ylabel('Error CV');
