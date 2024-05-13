@@ -62,29 +62,29 @@ Y_test = Y(pos_test);
 rng(2)
 k = 10;
 cc = cvpartition(length(Y_train),'KFold',k);% ¡OJO! -> NECESIDAD DE DEFINIR PREVIAMENTE 'y1'
-% % % C_grid = [0.001,0.01,0.1,1.5,10,100];
-% % % 
-% % % error_SVM = [];
-% % % for i = 1:k
-% % % 
-% % %     X_train_CV = X_train(cc.training(i),:);
-% % %     X_test_CV = X_train(cc.test(i),:);
-% % % 
-% % %     Y_train_CV = Y_train(cc.training(i));
-% % %     Y_test_CV = Y_train(cc.test(i));
-% % % 
-% % %     for j=1:length(C_grid)
-% % % 
-% % %     mdl_SVM = fitcsvm(X_train_CV,Y_train_CV,"BoxConstraint",C_grid(j),"KernelFunction","linear");
-% % %     label = predict(mdl_SVM,X_test_CV);
-% % %     error_SVM(i,j) = 100*(1-sum(label==Y_test_CV)/length(Y_test_CV));
-% % % 
-% % %     end
-% % % 
-% % % end
-% % % 
-% % % [val,pos] = min(mean(error_SVM));
-% % % val
+C_grid = [0.001,0.01,0.1,1.5,10,100];
+
+error_SVM = [];
+for i = 1:k
+
+    X_train_CV = X_train(cc.training(i),:);
+    X_test_CV = X_train(cc.test(i),:);
+
+    Y_train_CV = Y_train(cc.training(i));
+    Y_test_CV = Y_train(cc.test(i));
+
+    for j=1:length(C_grid)
+
+    mdl_SVM = fitcsvm(X_train_CV,Y_train_CV,"BoxConstraint",C_grid(j),"KernelFunction","linear");
+    label = predict(mdl_SVM,X_test_CV);
+    error_SVM(i,j) = 100*(1-sum(label==Y_test_CV)/length(Y_test_CV));
+
+    end
+
+end
+
+[val,pos] = min(mean(error_SVM));
+val
 
 % Val 9.2195 ; Pos 2 (C = 0.01)
 
