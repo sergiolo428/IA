@@ -95,6 +95,7 @@ MSE = mean((ypred-Y(pos_test)).^2);
 fprintf('RMSE (TEST) del árbol bagged = %4.2f \n\n',sqrt(MSE));
 
 % ----------------------------------------------------------------------- %
+
 rng(4);
 mdl_RF = TreeBagger(100,X(pos_train,:),Y(pos_train),"Method","regression",...
     "NumPredictorsToSample",4); % "all" para considerar todos los predictores por arbol

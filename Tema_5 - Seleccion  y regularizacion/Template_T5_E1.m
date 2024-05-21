@@ -188,6 +188,7 @@ for aa=1:k
 end
 
 [val,pos] = min(mean(CV_MSE_PCR));
+val
 
 figure(2)
 plot(mean(CV_MSE_PCR));
