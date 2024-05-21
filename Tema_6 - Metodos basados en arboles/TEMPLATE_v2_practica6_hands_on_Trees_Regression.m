@@ -15,7 +15,7 @@ pos_train = hpartition.training;
 pos_test = hpartition.test;
 
 Y = Boston.medv;
-X = X(:,1:end-1);
+X = Boston(:,1:end-1);
 
 % Entrenamos árbol de regresión
 tree = fitrtree(X(pos_train,:),Y(pos_train));
@@ -61,6 +61,7 @@ for aa = 1:k
     
 end
 [val,pos] = min(mean(CV_MSE));
+
 tree_pruned = prune(tree,'Alpha',alpha_grid(pos));
 % Visualizamos árbol de clasificación
 view(tree_pruned,'Mode','graph')

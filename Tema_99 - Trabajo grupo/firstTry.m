@@ -26,4 +26,8 @@ ypred = ypred';
 
 fprintf("\nACC: %.5f ",ACC)
 
+
+scatter(Ytrain(:,1),Xtrain(:,2))
+
+
 end
