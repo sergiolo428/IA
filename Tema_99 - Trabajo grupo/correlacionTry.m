@@ -1,19 +1,30 @@
 function correlacionTry
 
-
 load Xtrain.mat
 load Ytrain.mat
 
+Xtrain;
 
-tablacorr = corr(Xtrain);
+n = 256; % Número de colores en el colormap
+quarter_n = n / 4;
+
+% Modificar la interpolación para un desvanecimiento más rápido
+blues = [linspace(0, 1, quarter_n)', linspace(0, 1, quarter_n)', linspace(1, 1, quarter_n)']; % De azul a blanco rápidamente
+whites = [linspace(1, 1, quarter_n)', linspace(1, 1, quarter_n)', linspace(1, 1, quarter_n)']; % Blanco
+reds = [linspace(1, 1, quarter_n)', linspace(0, 1, quarter_n)', linspace(0, 1, quarter_n)']; % De blanco a rojo rápidamente
+
+% Combinar los colormaps
+cmap = [blues; whites; flipud(reds)]; % Azul a blanco, luego blanco a rojo
 
 corte = 0.95;
+tablacorr = corr(Xtrain);
+
+h = heatmap(tablacorr)
+colormap(cmap)
+h.ColorLimits = [-1,1]
+
 
 [row, col] = find(abs(tablacorr)>corte & abs(tablacorr) <1);
-
-a = find(abs(tablacorr)==1);
-
-length(a);
 
 pairs = [];
 for k = 1:length(row)
@@ -22,8 +33,7 @@ for k = 1:length(row)
     end
 end
 
-tablacorr;
-pairs';
+pairs'
 
 % figure(1)
 % num=size(pairs,1);
@@ -42,17 +52,36 @@ pairs';
 %     title(titulo);
 % end 
 
-% % % rng(22)
-% % % model = TreeBagger(300, Xtrain, Ytrain,"Method","classification","NumPredictorsToSample","all",'OOBPredictorImportance', 'On');
-% % % importance = model.OOBPermutedPredictorDeltaError;
-% % % 
-% % % figure(2)
-% % % bar(importance);
-% % % ylabel('Importancia');
-% % % xlabel('Predictores');
-% % % 
-% % % b = corr(Xtrain,Ytrain);
-% % % find(abs(b)>0.6);
+rng(22)
+model = TreeBagger(300, Xtrain, Ytrain,"Method","classification","NumPredictorsToSample","all",'OOBPredictorImportance', 'On');
+importance = model.OOBPermutedPredictorDeltaError;
+
+figure(2)
+bar(importance);
+ylabel('Importancia');
+xlabel('Predictores');
+
+b = corr(Xtrain,Ytrain);
+find(abs(b)>0.6);
+
+[sorted_importance, idx] = sort(importance, 'descend');
+
+% Seleccionar los 20 primeros predictores más importantes
+top_20_importance = sorted_importance(1:20);
+top_20_idx = idx(1:20);
+
+% Obtener los nombres de los predictores correspondientes
+predictor_names = model.PredictorNames(top_20_idx);
+
+% Graficar
+figure;
+bar(top_20_importance);
+xticks(1:20);
+xticklabels(predictor_names);
+xtickangle(45); % Rotar los nombres de los predictores para mayor legibilidad
+ylabel('Importancia');
+title('Top 20');
+
 
 
 % Predictores Importantes:

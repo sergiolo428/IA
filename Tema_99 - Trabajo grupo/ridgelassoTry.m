@@ -18,7 +18,6 @@ x_test = Xtrain(pos_test,:);
 y_test = Ytrain(pos_test);
 
 
-
 rng(2);
 k = 10;
 
@@ -67,5 +66,9 @@ subplot(211);plot(lambda_grid,mean(CV_MSE,1));title('RIDGE');
 hold on;plot(lambda_grid(pos),val,'ro');hold off;
 subplot(212);plot(lambda_grid_LASSO,mean(CV_MSE_LASSO,1));title('LASSO');
 hold on;plot(lambda_grid_LASSO(pos2),val2,'ro');hold off;
+
+
+[B,FitInfo] = lasso(Xtrain,Ytrain,"Lambda",lambda_grid(pos2));
+
 
 end

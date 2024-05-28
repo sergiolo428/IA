@@ -1,7 +1,9 @@
-function SVMTry
+function modelo_final
 
 load Xtrain.mat
 load Ytrain.mat
+
+Xtrain = Xtrain(:,[1 3 4 9 13 14 15 17 36 46 47]);
 
 trainPorcen = 0.5;
 
@@ -22,7 +24,7 @@ k = 10;
 cc = cvpartition(length(y_train),'KFold',k);
 
 rng(2)
-CV_error=[];C_grid = [0.1,1,10,100,1000];KS_grid = [0.5 1 2 3 4 5 10];
+CV_error=[];C_grid = 10;KS_grid = 1;
 k=10;
 for i = 1:k
 
@@ -36,11 +38,12 @@ for i = 1:k
     for j=1:length(C_grid)
         for z=1:length(KS_grid)
             
-            %mdl_gaus = fitcsvm(X_train_CV,Y_train_CV,"BoxConstraint",C_grid(j),"KernelFunction","linear");
             mdl_gaus = fitcsvm(X_train_CV,Y_train_CV,"BoxConstraint",C_grid(j),"KernelFunction","gaussian","KernelScale",KS_grid(z));
 
             label = predict(mdl_gaus,X_test_CV);
-            CV_error(j,z,i) = 100*(1-sum(label==Y_test_CV)/length(Y_test_CV));
+            [SE,SP,ACC,BAC] = compute_metrics(label,Y_test_CV);
+            CV_error(j,z,i) = 100*(ACC);
+            
         end
     end
 end
@@ -51,10 +54,6 @@ CV_medios = mean(CV_error,3);
 
 [row,col] = ind2sub(size(CV_medios),pos);
 
-% val 29.6 ; C 1 ; gamma 10 ;
-val
-C_grid(row)
-KS_grid(col)
-
+fprintf("\nEl acierto es de %4.2f\n",val);
 
 end
